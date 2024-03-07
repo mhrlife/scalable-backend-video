@@ -9,6 +9,7 @@ ENV GOCACHE=/root/.cache/go-build
 RUN --mount=type=cache,target="/root/.cache/go-build" go build -o app
 
 FROM alpine:latest
+RUN apk add --no-cache bash
 RUN mkdir /app
 WORKDIR /app
 COPY --from=builder /app/app .
