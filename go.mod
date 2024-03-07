@@ -1,6 +1,6 @@
 module ScalableBackend
 
-go 1.22.0
+go 1.21.0
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
