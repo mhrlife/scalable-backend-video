@@ -10,10 +10,12 @@ import (
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
+	"runtime"
 	"strings"
 )
 
 func main() {
+	runtime.GOMAXPROCS(1)
 	// loading .env file for the local development
 	_ = godotenv.Load()
 	// setup mysql connections
