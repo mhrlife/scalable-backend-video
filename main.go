@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	logrus.WithField("num", runtime.NumCPU()).Info("num cpu")
+	runtime.GOMAXPROCS(1)
 	// loading .env file for the local development
 	_ = godotenv.Load()
 	// setup mysql connections
