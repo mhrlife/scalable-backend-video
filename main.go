@@ -8,14 +8,13 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/samber/lo"
 	"github.com/sirupsen/logrus"
+	_ "go.uber.org/automaxprocs"
 	"net/http"
 	"os"
-	"runtime"
 	"strings"
 )
 
 func main() {
-	runtime.GOMAXPROCS(1)
 	// loading .env file for the local development
 	_ = godotenv.Load()
 	// setup mysql connections
