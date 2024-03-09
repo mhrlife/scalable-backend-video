@@ -33,7 +33,7 @@ func (g *GormDatabase) ListTags(ctx context.Context) ([]entity.Tag, error) {
 }
 
 func (g *GormDatabase) ListTagArticles(ctx context.Context, slug string) ([]entity.Article, error) {
-	return g.listTagArticlesAggregate(ctx, slug)
+	return g.listTagArticlesLegacy(ctx, slug)
 }
 
 type articleTagResults struct {
@@ -44,7 +44,6 @@ type articleTagResults struct {
 func (g *GormDatabase) listTagArticlesAggregate(ctx context.Context, slug string) ([]entity.Article, error) {
 	var results []articleTagResults
 
-	// Assuming 'db' is your *gorm.DB instance
 	err := g.db.WithContext(ctx).Raw(`
 SELECT articles.id, articles.created_at, articles.updated_at, articles.deleted_at, articles.title, articles.content, articles.author_id, 
        authors.id AS Author__id, authors.created_at AS Author__created_at, authors.updated_at AS Author__updated_at, authors.deleted_at AS Author__deleted_at, authors.display_name AS Author__display_name,
