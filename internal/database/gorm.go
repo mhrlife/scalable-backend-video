@@ -33,8 +33,8 @@ func NewGorm(masterDSN string, replicaDSNs ...string) (*gorm.DB, error) {
 
 	sqlDB, _ := db.DB()
 
-	sqlDB.SetMaxIdleConns(350)
-	sqlDB.SetMaxOpenConns(450)
+	sqlDB.SetMaxIdleConns(200)
+	sqlDB.SetMaxOpenConns(200)
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
 	return db, nil
