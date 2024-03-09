@@ -1,4 +1,4 @@
-FROM golang:1.21-bullseye as builder
+FROM hub.hamdocker.ir/golang:1.21 as builder
 
 WORKDIR /app
 COPY go.mod .

@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/plugin/dbresolver"
+	"time"
 )
 
 func NewGorm(masterDSN string, replicaDSNs ...string) (*gorm.DB, error) {
@@ -29,6 +30,12 @@ func NewGorm(masterDSN string, replicaDSNs ...string) (*gorm.DB, error) {
 		logrus.WithError(err).Error("couldn't setup replica databases")
 		return nil, err
 	}
+
+	sqlDB, _ := db.DB()
+
+	sqlDB.SetMaxIdleConns(350)
+	sqlDB.SetMaxOpenConns(450)
+	sqlDB.SetConnMaxLifetime(time.Hour)
 
 	return db, nil
 }
