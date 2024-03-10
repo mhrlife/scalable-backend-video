@@ -14,15 +14,17 @@ type EchoController struct {
 	e              *echo.Echo
 	db             database.Database
 	endpointMetric *promhelper.HistogramWithCounter
-	cache          cache.Cache
+	redisCache     cache.Cache
+	inMemCache     cache.Cache
 }
 
-func NewEchoController(e *echo.Echo, db database.Database, cache cache.Cache) *EchoController {
+func NewEchoController(e *echo.Echo, db database.Database, redisCache cache.Cache, inMemCache cache.Cache) *EchoController {
 	c := &EchoController{
 		e:              e,
 		db:             db,
 		endpointMetric: promhelper.NewHistogramWithCounter("app_endpoint_response", prometheus.DefBuckets),
-		cache:          cache,
+		redisCache:     redisCache,
+		inMemCache:     inMemCache,
 	}
 	c.urls()
 	return c
