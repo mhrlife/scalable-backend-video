@@ -12,6 +12,7 @@ func (ec *EchoController) tagUrls() {
 	g.POST("/", ec.createTag)
 	g.GET("/", ec.listTags)
 	g.GET("/:slug/", ec.listTagArticles)
+	g.GET("/:slug/cached/", ec.listTagArticlesCached)
 }
 
 type createTagRequest struct {
@@ -53,8 +54,21 @@ func (ec *EchoController) listTags(c echo.Context) error {
 	})
 }
 
+func (ec *EchoController) listTagArticlesCached(c echo.Context) error {
+	return ec.endpointMetric.Do("list_tag_articles_cached", func() error {
+		articles, err := ec.cache.TagArticles(c.Request().Context(), c.Param("slug"))
+		if err != nil {
+			return err
+		}
+		return c.JSON(200, articles)
+	})
+}
+
 func (ec *EchoController) listTagArticles(c echo.Context) error {
 	return ec.endpointMetric.Do("list_tag_articles", func() error {
+
+		ec.cache.TagArticles(c.Request().Context(), c.Param("slug"))
+
 		articles, err := ec.db.ListTagArticles(c.Request().Context(), c.Param("slug"))
 		if err != nil {
 			return err

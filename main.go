@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ScalableBackend/internal/cache"
 	"ScalableBackend/internal/controller"
 	"ScalableBackend/internal/database"
 	"github.com/joho/godotenv"
@@ -32,7 +33,12 @@ func main() {
 	if err := gdb.Migrate(); err != nil {
 		logrus.WithError(err).Panicln("error while migrating the database")
 	}
-
+	// set up the cache
+	rdb := cache.NewRedis(os.Getenv("REDIS_ADDRESS"), os.Getenv("REDIS_PASSWORD"))
+	defer rdb.Close()
+	synchronize := cache.NewSync(rdb, gdb)
+	_ = synchronize
+	rc := cache.NewRedisCache(rdb)
 	// set up Prometheus exposer
 	http.Handle("/metrics", promhttp.Handler())
 	logrus.Info("starting the metric server on port 8081")
@@ -44,7 +50,7 @@ func main() {
 	}()
 	// set up the http apis
 	e := echo.New()
-	controller.NewEchoController(e, gdb)
+	controller.NewEchoController(e, gdb, rc)
 	logrus.Info("starting the api server on port 8080")
 	logrus.WithError(err).Error(e.Start(":8080"))
 }

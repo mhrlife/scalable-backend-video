@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"ScalableBackend/internal/cache"
 	"ScalableBackend/internal/database"
 	"ScalableBackend/internal/promhelper"
 	"github.com/labstack/echo/v4"
@@ -13,13 +14,15 @@ type EchoController struct {
 	e              *echo.Echo
 	db             database.Database
 	endpointMetric *promhelper.HistogramWithCounter
+	cache          cache.Cache
 }
 
-func NewEchoController(e *echo.Echo, db database.Database) *EchoController {
+func NewEchoController(e *echo.Echo, db database.Database, cache cache.Cache) *EchoController {
 	c := &EchoController{
 		e:              e,
 		db:             db,
 		endpointMetric: promhelper.NewHistogramWithCounter("app_endpoint_response", prometheus.DefBuckets),
+		cache:          cache,
 	}
 	c.urls()
 	return c
