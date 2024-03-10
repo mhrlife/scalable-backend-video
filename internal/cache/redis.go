@@ -8,6 +8,7 @@ import (
 func NewRedis(address string, password string) rueidis.Client {
 	client, err := rueidis.NewClient(rueidis.ClientOption{
 		InitAddress: []string{address},
+		Username:    "default",
 		Password:    password,
 	})
 	if err != nil {
