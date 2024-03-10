@@ -77,9 +77,6 @@ func (ec *EchoController) listTagArticlesInMemCached(c echo.Context) error {
 
 func (ec *EchoController) listTagArticles(c echo.Context) error {
 	return ec.endpointMetric.Do("list_tag_articles", func() error {
-
-		ec.redisCache.TagArticles(c.Request().Context(), c.Param("slug"))
-
 		articles, err := ec.db.ListTagArticles(c.Request().Context(), c.Param("slug"))
 		if err != nil {
 			return err
